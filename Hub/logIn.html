@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
+    <link href="css/loginStyle.css" rel="stylesheet">
+    <script>
+        window.onload = function(){
+            var goLogin = document.getElementsByName("goLogin")[0];
+            goLogin.addEventListener('click', function(){
+                window.location.href = 'login.html';
+            });
+        };
+    </script>
+</head>
+<body class="bg-dark">
+   <!-- Navigation-->
+   <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container px-4 px-lg-5">
+        <a class="navbar-brand" href="index1.html">Hub</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">전체보기</a></li>
+                <li class="nav-item"><a class="nav-link active" href="communityGuide.html">이용약관</a></li>
+                <!-- <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" href="#!">All Products</a></li>
+                        <li><hr class="dropdown-divider" /></li>
+                        <li><a class="dropdown-item" href="#!">Popular Items</a></li>
+                        <li><a class="dropdown-item" href="#!">New Arrivals</a></li>
+                    </ul>
+                </li> -->
+            </ul>
+            <form class="d-flex">
+                <button name="goLogin" class="btn btn-outline-dark" type="button">
+                    로그인
+                </button>
+            </form>
+        </div>
+    </div>
+   </nav>
+
+    <div class="wrap">
+        <div class="form-wrap">
+            <div class="button-wrap">
+                <div id="btn"></div>
+                <button type="button" class="togglebtn" onclick="login()">LOG IN</button>
+                <button type="button" class="togglebtn" onclick="register()">REGISTER</button>
+            </div>
+            <div class="social-icons">
+                <img src="img/fb.png" alt="facebook">
+                <img src="img/tw.png" alt="twitter">
+                <img src="img/gl.png" alt="google">
+            </div>
+            <form id="login" action="" class="input-group">
+                <input type="text" class="input-field" placeholder="User name or Email" required>
+                <input type="password" class="input-field" placeholder="Enter Password" required>
+                <input type="checkbox" class="checkbox"><span>Remember Password</span>
+                <button class="submit">Login</button>
+            </form>
+            <form id="register" action="" class="input-group">
+                <input type="text" class="input-field" placeholder="User name or Email" required>
+                <input type="email" class="input-field" placeholder="Your Email" required>
+                <input type="password" class="input-field" placeholder="Enter Password" required>
+                <input type="checkbox" class="checkbox"><span>Terms and conditions</span>
+                <button class="submit">REGISTER</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        var x = document.getElementById("login");
+        var y = document.getElementById("register");
+        var z = document.getElementById("btn");
+        
+        
+        function login(){
+            x.style.left = "50px";
+            y.style.left = "450px";
+            z.style.left = "0";
+        }
+
+        function register(){
+            x.style.left = "-400px";
+            y.style.left = "50px";
+            z.style.left = "110px";
+        }
+    </script>
+
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+        <div class="container"><p class="m-0 text-center text-white">Copyright &copy; 웹프로그래밍 8조</p></div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+
+</body>
+</html>

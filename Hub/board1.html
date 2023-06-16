@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>게시판</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
+
+    <script>
+        window.onload = function(){
+            var goLogin = document.getElementsByName("goLogin")[0];
+            goLogin.addEventListener('click', function(){
+                window.location.href = 'login.html';
+            });
+
+            // 서버에서 게시글 목록을 가져와서 화면에 표시하는 함수
+            function displayPosts() {
+            var posts = [
+                { title: "내 고양이 좀 보고가세요!!", link: "post1.html" },
+                { title: "나만 고양이가 없노", link: "post2.html" },
+                { title: "어떻게 생기셨나요?", link: "post3.html" }
+            ];
+
+            var communityBoard = document.getElementById("communityBoard");
+
+            // 게시글을 하나씩 생성하고 화면에 표시합니다.
+            posts.forEach(function (post, index) {
+                var postElement = document.createElement("a");
+                postElement.classList.add("post-link");
+                postElement.textContent = (index + 1) + ". " + post.title;
+                postElement.href = post.link; // 개별적인 게시글로 이동할 링크를 설정해주세요.
+                communityBoard.appendChild(postElement);
+                communityBoard.appendChild(document.createElement("br"));
+            });
+        }
+
+        displayPosts();
+        };
+    </script>
+    
+</head>
+<body>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="index1.html">Hub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">전체보기</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="communityGuide.html">이용약관</a></li>
+                </ul>
+                <form class="d-flex">
+                    <button name="goLogin" class="btn btn-outline-dark" type="button">
+                        로그인
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <!-- Header-->
+    <header class="bg-dark py-5">
+        <div class="container px-2 px-lg-2 my-1">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">고양이 게시판</h1>
+            </div>
+        </div>
+    </header>
+    <!-- Section-->
+    
+    <div class="container px-4 px-lg-5 mt-5">
+          
+        <div class="text-center fw-bolder community-post" id="communityBoard">
+        </div>
+
+        <!-- 글 만들기 버튼 -->
+        <div class="text-end mb-4">
+            <a class="btn btn-dark" id="createBoardBtn" href = "create.html">글쓰기</a>
+        </div>
+
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <!-- 게시판 카드들 -->
+        </div>
+
+        <!-- 페이지 버튼 컨테이너 -->
+        <div class="text-center mb-5" id="pageButtons"></div>
+
+        <!-- 슬라이드되는 컨텐츠 -->
+        <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center" id="contentRow">
+            <!-- 컨텐츠 내용 -->
+        </div>
+
+        <!-- 페이지 이전/다음 버튼 -->
+        <div class="d-flex justify-content-center">
+            <!-- 이전 버튼 -->
+            <button class="btn btn-outline-dark me-2" id="prevBtn">이전</button>
+            <!-- 페이지 숫자 버튼 -->
+            <div id="pageNumber"></div>
+            <!-- 다음 버튼 -->
+            <button onclick="nextPage()" class="btn btn-outline-dark me-2" id="nextBtn">다음</button>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        var contentRow = document.getElementById("contentRow");
+        var pageButtonsContainer = document.getElementById("pageButtons");
+        var pageNumberContainer = document.getElementById("pageNumber");
+        var contentWidth = contentRow.scrollWidth;
+        var containerWidth = contentRow.offsetWidth;
+        var scrollPos = 0;
+        var pageSize = 8; // 페이지당 보여줄 아이템 개수
+        var currentPage = 1; // 현재 페이지
+
+        //  // 게시판 만들기 버튼 클릭 이벤트 처리
+        // const createBoardButton = document.getElementById('createBoardBtn');
+        // createBoardButton.addEventListener('click', function() {
+        //     // 새로운 게시판 생성 및 로직 작성
+        //     const boardName = prompt('게시판 이름을 입력하세요:');
+        //     if (boardName) {
+        //         // 게시판 생성 로직 작성
+        //         // 예: 새로운 게시판을 데이터베이스에 저장하고, 페이지에 추가하는 코드 등
+        //         console.log('새로운 게시판 생성:', boardName);
+        //     }
+        // });
+
+        
+        // 데이터 서버에서 가져온 아이템 개수에 따라 페이지 버튼 업데이트
+        function updatePageButtons(itemCount) {
+            var pageCount = Math.ceil(itemCount / pageSize);
+            pageButtonsContainer.innerHTML = "";
+    
+            for (var i = 0; i < pageCount; i++) {
+                var button = document.createElement("button");
+                button.classList.add("btn", "btn-outline-dark", "me-2");
+                button.innerHTML = i + 1;
+    
+                // 페이지 버튼 클릭 시 해당 페이지로 이동
+                button.addEventListener("click", function (e) {
+                    var pageNum = parseInt(e.target.innerHTML);
+                    scrollPos = (pageNum - 1) * containerWidth;
+                    contentRow.style.transform = `translateX(${-scrollPos}px)`;
+                    currentPage = pageNum;
+                    updatePageButtonStyle();
+                    window.location.href = `board${currentPage}.html`;
+                });
+    
+                // 마우스 오버 시 스타일 변경
+                button.addEventListener("mouseover", function (e) {
+                    e.target.classList.add("btn-secondary");
+                });
+    
+                // 마우스 아웃 시 스타일 초기화
+                button.addEventListener("mouseout", function (e) {
+                    e.target.classList.remove("btn-secondary");
+                    updatePageButtonStyle();
+                });
+    
+                pageButtonsContainer.appendChild(button);
+            }
+        }
+    
+        // 페이지 버튼 스타일 업데이트
+        function updatePageButtonStyle() {
+            var buttons = pageButtonsContainer.getElementsByTagName("button");
+    
+            for (var i = 0; i < buttons.length; i++) {
+                if (i === currentPage - 1) {
+                    buttons[i].classList.add("btn-secondary");
+                } else {
+                    buttons[i].classList.remove("btn-secondary");
+                }
+            }
+        }
+    
+        // 페이지 버튼 생성 및 초기화
+        function initializePageButtons() {
+            getDataItemCount().then(function (itemCount) {
+                updatePageButtons(itemCount);
+                updatePageButtonStyle();
+            });
+        }
+    
+        // 이전 버튼 클릭 시 스크롤 왼쪽으로 이동
+        document.getElementById("prevBtn").addEventListener("click", function () {
+            scrollPos -= containerWidth;
+            scrollPos = Math.max(scrollPos, 0);
+            contentRow.style.transform = `translateX(${-scrollPos}px)`;
+            currentPage--;
+            currentPage = Math.max(currentPage, 1);
+            updatePageButtonStyle();
+        });
+    
+        // 다음 버튼 클릭 시 스크롤 오른쪽으로 이동
+        document.getElementById("nextBtn").addEventListener("click", function () {
+            nextPage();
+        });
+    
+        // 데이터 서버에서 아이템 개수를 가져오는 비동기 함수
+        function getDataItemCount() {
+            return new Promise(function (resolve) {
+                // 예시로 20개 아이템이 있다고 가정
+                var itemCount = 20;
+                resolve(itemCount);
+            });
+        }
+    
+        // 페이지 버튼 생성 및 초기화 실행
+        initializePageButtons();
+    
+        function nextPage() {
+            // 다음 페이지로 이동하는 로직을 작성합니다.
+            // 여기에는 페이지 전환에 필요한 코드가 들어갑니다.
+            // 예를 들면, window.location.href = "다음페이지URL"; 와 같은 방식으로 페이지를 이동할 수 있습니다.
+            // 이 코드는 실제 페이지로 맞게 수정해야 합니다.
+            
+            window.location.href = "#!";
+        }
+    </script>
+
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+        <div class="container"><p class="m-0 text-center text-white">&copy; 웹프로그래밍 8조</p></div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+</body>
+</html>
